@@ -251,14 +251,19 @@ for (const target of TARGETS) {
   }
 
   const platform = target.pkg.replace(/^node22-/, '');
+  const arch = platform.split('-').pop();
   const candidates = [
     dest,
     join(outDir, `aprs-webchat-${platform}`),
+    join(outDir, `aprs-webchat-${arch}`),
     join(outDir, `aprs-webchat-${platform}.exe`),
+    join(outDir, `aprs-webchat-${arch}.exe`),
     join(outDir, 'aprs-webchat'),
     join(outDir, 'aprs-webchat.exe'),
     join(outDir, `entry-${platform}`),
     join(outDir, `entry-${platform}.exe`),
+    join(outDir, `entry-${arch}`),
+    join(outDir, `entry-${arch}.exe`),
   ];
 
   const found = candidates.find((path) => existsSync(path));
