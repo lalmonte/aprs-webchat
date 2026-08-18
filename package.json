@@ -1,0 +1,44 @@
+{
+  "name": "aprs-webchat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Web-based APRS messaging dashboard for Direwolf (KISS TCP) and APRS-IS",
+  "license": "MIT",
+  "homepage": "https://github.com/lalmonte/aprs-webchat",
+  "bugs": {
+    "url": "https://github.com/lalmonte/aprs-webchat/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lalmonte/aprs-webchat.git"
+  },
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c cyan,magenta \"npm run dev -w server\" \"npm run dev -w web\"",
+    "build": "npm run build -w server && npm run build -w web",
+    "start": "npm run start -w server",
+    "test": "npm run test -w server",
+    "mock:tnc": "npm run mock:tnc -w server",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w web",
+    "package": "node scripts/package.mjs",
+    "release": "node scripts/release.mjs",
+    "android:sync": "npm run build -w web && npx cap sync android",
+    "android:open": "npx cap open android",
+    "android:build": "npm run android:sync && cd android && ./gradlew assembleDebug"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@yao-pkg/pkg": "^6.22.0",
+    "concurrently": "^9.2.4"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.4.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

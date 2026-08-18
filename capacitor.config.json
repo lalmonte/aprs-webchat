@@ -1,0 +1,13 @@
+{
+  "appId": "com.hi3lag.aprswebchat",
+  "appName": "APRS WebChat",
+  "webDir": "web/dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "backgroundColor": "#0b1120"
+  }
+}

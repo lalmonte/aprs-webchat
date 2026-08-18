@@ -1,0 +1,98 @@
+@import 'tailwindcss';
+@plugin 'daisyui' {
+  themes:
+    dark --default,
+    light;
+}
+
+@theme {
+  --font-mono:
+    'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+}
+
+:root {
+  color-scheme: dark;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% -10%, oklch(35% 0.09 250 / 0.5), transparent 45%),
+    radial-gradient(circle at 90% 0%, oklch(40% 0.1 190 / 0.35), transparent 40%),
+    oklch(17% 0.02 250);
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  padding:
+    var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Slim scrollbars keep the message thread and log console compact. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(45% 0.02 250) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: oklch(45% 0.02 250);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Frosted panel used for every dashboard surface. */
+@utility panel {
+  background-color: oklch(21% 0.02 255 / 0.72);
+  border: 1px solid oklch(100% 0 0 / 0.07);
+  backdrop-filter: blur(12px);
+}
+
+@keyframes signal-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 4px transparent;
+  }
+}
+
+@utility signal-pulse {
+  animation: signal-pulse 2s ease-in-out infinite;
+}
+
+/* APRS symbol markers: keep callsign labels visible outside the icon box. */
+.leaflet-div-icon.aprs-symbol-marker {
+  overflow: visible !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Leaflet maps fill their flex parent on phones without a fixed height. */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}

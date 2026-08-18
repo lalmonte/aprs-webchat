@@ -1,0 +1,25 @@
+node_modules/
+dist/
+.test-build/
+.tmp/
+packaging/
+dist-bin/
+.npm-cache/
+android/.gradle/
+android/.idea/
+android/app/build/
+android/build/
+android/capacitor-cordova-android-plugins/build/
+android/local.properties
+*.apk
+*.aab
+*.iml
+
+# Persisted configuration (contains the APRS-IS passcode) and chat history.
+server/data/
+/data/
+.env
+.env.local
+
+*.log
+.DS_Store

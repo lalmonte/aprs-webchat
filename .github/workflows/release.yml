@@ -1,0 +1,60 @@
+# Builds desktop / Raspberry Pi binaries and attaches them to a GitHub Release.
+# Trigger: pushing a tag that matches vX.Y.Z  (see docs/RELEASE.md).
+# Android APKs are intentionally omitted.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Package and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install, test, package
+        run: |
+          npm ci
+          npm test
+          npm run typecheck
+          npm run package
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: APRS WebChat ${{ github.ref_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          body: |
+            Station-side APRS messaging dashboard (Direwolf KISS + APRS-IS).
+
+            **Android is not included** in this release.
+
+            See [CHANGELOG.md](https://github.com/lalmonte/aprs-webchat/blob/main/CHANGELOG.md)
+            and the [README](https://github.com/lalmonte/aprs-webchat#download-no-nodejs-required)
+            for install notes. macOS / Windows binaries are unsigned — right-click
+            Open / SmartScreen on first launch. Verify downloads with `SHA256SUMS`.
+
+            Transmitting APRS requires a valid amateur radio licence.
+          files: |
+            dist-bin/aprs-webchat-win-x64.exe
+            dist-bin/aprs-webchat-linux-x64
+            dist-bin/aprs-webchat-linux-arm64
+            dist-bin/aprs-webchat-raspberry-pi-arm64
+            dist-bin/aprs-webchat-macos-x64
+            dist-bin/aprs-webchat-macos-arm64
+            dist-bin/README.txt
+            dist-bin/SHA256SUMS

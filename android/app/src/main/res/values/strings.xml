@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">APRS WebChat</string>
+    <string name="title_activity_main">APRS WebChat</string>
+    <string name="package_name">com.hi3lag.aprswebchat</string>
+    <string name="custom_url_scheme">com.hi3lag.aprswebchat</string>
+</resources>
