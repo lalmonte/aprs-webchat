@@ -1,6 +1,6 @@
 {
   "name": "aprs-webchat",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "description": "Web-based APRS messaging dashboard for Direwolf (KISS TCP) and APRS-IS",
   "license": "MIT",
