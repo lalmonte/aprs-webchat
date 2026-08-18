@@ -51,9 +51,13 @@ executable. Direwolf still runs as a separate program.
 Optional environment variables: `PORT`, `HOST` (use `0.0.0.0` to open the
 dashboard from other devices on the LAN), `APRS_OPEN_BROWSER=0`, `APRS_DATA_DIR`.
 
-> **macOS.** The binary is unsigned. The first launch may need a right-click →
-> **Open**. **Windows** SmartScreen may warn for the same reason. Compare the
-> file against `SHA256SUMS` if you want to verify the download.
+> **macOS.** GitHub builds are **ad-hoc signed** so Apple Silicon will run them
+> (`chmod +x` is not enough on an unsigned download — macOS kills it). The first
+> launch from Safari/Chrome may still need a right-click → **Open** because of
+> quarantine. If the shell says `killed`, run:
+> `xattr -d com.apple.quarantine ./aprs-webchat-macos-arm64`.
+> **Windows** SmartScreen may warn. Compare the file against `SHA256SUMS` if you
+> want to verify the download.
 
 **Raspberry Pi:** use `aprs-webchat-raspberry-pi-arm64` on a **64-bit** Raspberry
 Pi OS (Pi 3 / 4 / 5 / Zero 2 W). Check with `uname -m` — it should print

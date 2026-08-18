@@ -31,7 +31,9 @@ The script will:
 5. Push `main` and the tag
 
 GitHub then runs [`.github/workflows/release.yml`](../.github/workflows/release.yml).
-When it finishes, the download page is:
+Linux and Windows binaries are built on Ubuntu; **macOS binaries are built and
+ad-hoc signed on a macOS runner** (Apple Silicon will SIGKILL an unsigned
+download). When it finishes, the download page is:
 
 <https://github.com/lalmonte/aprs-webchat/releases/latest>
 

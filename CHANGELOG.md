@@ -2,6 +2,11 @@
 
 All notable changes to APRS WebChat are documented in this file.
 
+## Unreleased
+
+- Sign macOS release binaries on a macOS GitHub runner so Apple Silicon
+  downloads are not killed at launch.
+
 ## 1.1.1 — 2026-08-18
 
 - Notify operators when GitHub has a newer tagged release: dismissible banner,

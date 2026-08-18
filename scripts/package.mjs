@@ -38,8 +38,11 @@ const outDir = join(root, 'dist-bin');
 /**
  * `copyFrom` reuses another finished binary under a friendlier name (e.g. the
  * Raspberry Pi build is the same linux-arm64 artifact).
+ *
+ * `APRS_PACKAGE_OS` (all | macos | linux) lets CI split macOS signing onto a
+ * macOS runner. Apple Silicon kills unsigned Mach-O binaries with SIGKILL.
  */
-const TARGETS = [
+const ALL_TARGETS = [
   { pkg: 'node22-macos-arm64', name: 'aprs-webchat-macos-arm64' },
   { pkg: 'node22-macos-x64', name: 'aprs-webchat-macos-x64' },
   { pkg: 'node22-linux-x64', name: 'aprs-webchat-linux-x64' },
@@ -52,7 +55,45 @@ const TARGETS = [
   { pkg: 'node22-win-x64', name: 'aprs-webchat-win-x64.exe' },
 ];
 
-const PKG_TARGETS = [...new Set(TARGETS.map((t) => t.pkg))];
+function selectTargets() {
+  const os = (process.env.APRS_PACKAGE_OS ?? 'all').toLowerCase();
+  if (os === 'all') return ALL_TARGETS;
+  if (os === 'macos') return ALL_TARGETS.filter((target) => target.pkg.includes('macos'));
+  if (os === 'linux') {
+    return ALL_TARGETS.filter(
+      (target) => target.pkg.includes('linux') || target.pkg.includes('win'),
+    );
+  }
+  throw new Error(`Unknown APRS_PACKAGE_OS="${os}". Use all, macos or linux.`);
+}
+
+const TARGETS = selectTargets();
+const PKG_TARGETS = [...new Set(TARGETS.map((target) => target.pkg))];
+
+function isMacBinary(name) {
+  return name.includes('macos');
+}
+
+/** Ad-hoc codesign so Apple Silicon will actually execute the file. */
+function adHocSignMac(filePath, name) {
+  if (!isMacBinary(name)) return;
+  if (process.platform !== 'darwin') {
+    console.warn(`  ! ${name} is unsigned (codesign is only available on macOS).`);
+    return;
+  }
+  try {
+    execFileSync('codesign', ['--remove-signature', filePath], { stdio: 'pipe' });
+  } catch {
+    // Already unsigned.
+  }
+  execFileSync(
+    'codesign',
+    ['--force', '--sign', '-', '--timestamp=none', filePath],
+    { stdio: 'inherit' },
+  );
+  execFileSync('codesign', ['--verify', filePath], { stdio: 'inherit' });
+  console.log(`  ✓ ad-hoc signed ${name}`);
+}
 
 function step(label) {
   console.log(`\n▸ ${label}`);
@@ -153,14 +194,21 @@ Direwolf still needs to be running separately if you want RF.
 Raspberry Pi: use aprs-webchat-raspberry-pi-arm64 on a 64-bit Raspberry Pi OS
 (Pi 3 / 4 / 5 / Zero 2 W). 32-bit Raspberry Pi OS is not supported.
 
+macOS: Apple Silicon requires a code signature. GitHub builds are ad-hoc
+signed on a Mac runner. If Safari/Chrome quarantines the download, right-click
+→ Open the first time, or:
+  xattr -d com.apple.quarantine ./aprs-webchat-macos-arm64
+
 Android is not included in these builds.
 
 Binaries:
-${TARGETS.map((t) => `  - ${t.name}`).join('\n')}
+${ALL_TARGETS.map((t) => `  - ${t.name}`).join('\n')}
 `,
 );
 
-step('Packaging with @yao-pkg/pkg (SEA)');
+step('Packaging selected targets');
+console.log(`  APRS_PACKAGE_OS=${process.env.APRS_PACKAGE_OS ?? 'all'}`);
+console.log(`  ${TARGETS.map((target) => target.name).join(', ')}`);
 const pkgCli = require.resolve('@yao-pkg/pkg/lib-es5/bin.js');
 const targetList = PKG_TARGETS.join(',');
 
@@ -197,6 +245,7 @@ for (const target of TARGETS) {
     } catch {
       // ignore
     }
+    adHocSignMac(dest, target.name);
     console.log(`  ✓ ${target.name} (from ${target.copyFrom})`);
     continue;
   }
@@ -233,6 +282,7 @@ for (const target of TARGETS) {
       // ignore
     }
   }
+  adHocSignMac(dest, target.name);
   console.log(`  ✓ ${target.name}`);
 }
 

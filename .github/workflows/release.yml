@@ -1,6 +1,10 @@
 # Builds desktop / Raspberry Pi binaries and attaches them to a GitHub Release.
 # Trigger: pushing a tag that matches vX.Y.Z  (see docs/RELEASE.md).
 # Android APKs are intentionally omitted.
+#
+# macOS binaries are packaged on a macOS runner so they can be ad-hoc signed.
+# Cross-compiling them on Ubuntu leaves an invalid signature; Apple Silicon
+# then SIGKILLs the download with no Gatekeeper dialog.
 
 name: Release
 
@@ -13,8 +17,8 @@ permissions:
   contents: write
 
 jobs:
-  release:
-    name: Package and publish
+  package-linux:
+    name: Package Linux and Windows
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -26,11 +30,76 @@ jobs:
           cache: npm
 
       - name: Install, test, package
+        env:
+          APRS_PACKAGE_OS: linux
         run: |
           npm ci
           npm test
           npm run typecheck
           npm run package
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-windows-binaries
+          path: dist-bin/
+          if-no-files-found: error
+
+  package-macos:
+    name: Package and sign macOS
+    runs-on: macos-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install and package
+        env:
+          APRS_PACKAGE_OS: macos
+        run: |
+          npm ci
+          npm run package
+
+      - name: Verify ad-hoc signatures
+        run: |
+          codesign --verify --verbose=4 dist-bin/aprs-webchat-macos-arm64
+          codesign --verify --verbose=4 dist-bin/aprs-webchat-macos-x64
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-binaries
+          path: dist-bin/
+          if-no-files-found: error
+
+  publish:
+    name: Publish GitHub Release
+    needs: [package-linux, package-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-windows-binaries
+          path: artifacts/linux
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-binaries
+          path: artifacts/macos
+
+      - name: Assemble dist-bin
+        run: |
+          mkdir -p dist-bin
+          cp artifacts/linux/* dist-bin/
+          cp artifacts/macos/aprs-webchat-macos-arm64 artifacts/macos/aprs-webchat-macos-x64 dist-bin/
+          {
+            cat artifacts/linux/SHA256SUMS
+            grep macos artifacts/macos/SHA256SUMS
+          } | sort -k2 > dist-bin/SHA256SUMS
+          ls -lh dist-bin
+          cat dist-bin/SHA256SUMS
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
@@ -45,8 +114,12 @@ jobs:
 
             See [CHANGELOG.md](https://github.com/lalmonte/aprs-webchat/blob/main/CHANGELOG.md)
             and the [README](https://github.com/lalmonte/aprs-webchat#download-no-nodejs-required)
-            for install notes. macOS / Windows binaries are unsigned — right-click
-            Open / SmartScreen on first launch. Verify downloads with `SHA256SUMS`.
+            for install notes.
+
+            **macOS.** Binaries are ad-hoc signed so Apple Silicon will run them.
+            A first launch from Safari/Chrome may still need right-click → Open
+            (quarantine). **Windows** SmartScreen may warn (unsigned). Verify
+            downloads with `SHA256SUMS`.
 
             Transmitting APRS requires a valid amateur radio licence.
           files: |
