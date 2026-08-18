@@ -4,6 +4,7 @@
   "private": true,
   "description": "Web-based APRS messaging dashboard for Direwolf (KISS TCP) and APRS-IS",
   "license": "MIT",
+  "author": "Luis Almonte (HI3LAG)",
   "homepage": "https://github.com/lalmonte/aprs-webchat",
   "bugs": {
     "url": "https://github.com/lalmonte/aprs-webchat/issues"

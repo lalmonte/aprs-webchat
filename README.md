@@ -12,7 +12,7 @@ air, over the internet, or both.
 This is **not** a hosted website like aprs.fi. You run it on *your* computer or
 Raspberry Pi, with *your* callsign. Other amateurs use their own copy.
 
-**Developed by [HI3LAG](https://www.qrz.com/db/HI3LAG)** (Dominican Republic).
+**Developed by Luis Almonte, [HI3LAG](https://www.qrz.com/db/HI3LAG)** (Dominican Republic).
 
 > **Licensing.** Transmitting APRS requires a valid amateur radio licence. Use
 > passcode `-1` to stay receive-only on APRS-IS.
@@ -323,7 +323,7 @@ npm run release          # patch bump, tag, push — CI publishes the binaries
 
 ## About
 
-Developed by **HI3LAG** (Dominican Republic).
+Developed by **Luis Almonte** ([HI3LAG](https://www.qrz.com/db/HI3LAG), Dominican Republic).
 
 - QRZ: <https://www.qrz.com/db/HI3LAG>
 - Email: <luis.ag@gmail.com>

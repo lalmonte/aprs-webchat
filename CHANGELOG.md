@@ -2,6 +2,11 @@
 
 All notable changes to APRS WebChat are documented in this file.
 
+## 1.1.0 — 2026-08-18
+
+- Credit the author as Luis Almonte (HI3LAG) in the licence, README, package
+  metadata and the in-app About dialog.
+
 ## 1.0.0 — 2026-08-18
 
 First public release.

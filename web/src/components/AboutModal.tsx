@@ -6,13 +6,14 @@ interface AboutModalProps {
 }
 
 const AUTHOR = {
+  name: 'Luis Almonte',
   callsign: 'HI3LAG',
   qrz: 'https://www.qrz.com/db/HI3LAG',
   email: 'luis.ag@gmail.com',
   github: 'https://github.com/lalmonte/aprs-webchat',
 };
 
-/** About dialog: author callsign, QRZ profile and contact email. */
+/** About dialog: author name, callsign, QRZ profile and contact email. */
 export function AboutModal({ open, onClose }: AboutModalProps) {
   useEffect(() => {
     if (!open) return;
@@ -55,14 +56,19 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
             </div>
             <div>
               <p className="text-sm font-semibold text-slate-100">Developed by</p>
-              <p className="font-mono text-lg font-bold tracking-wide text-sky-300">
-                {AUTHOR.callsign}
-              </p>
+              <p className="text-lg font-bold tracking-wide text-sky-300">{AUTHOR.name}</p>
+              <p className="font-mono text-sm text-slate-300">{AUTHOR.callsign}</p>
               <p className="text-[11px] text-slate-500">Dominican Republic</p>
             </div>
           </div>
 
           <dl className="space-y-3 rounded-xl border border-white/5 bg-black/25 p-4 text-sm">
+            <div>
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                Author
+              </dt>
+              <dd className="mt-0.5 text-slate-100">{AUTHOR.name}</dd>
+            </div>
             <div>
               <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                 Callsign
