@@ -2,6 +2,11 @@
 
 All notable changes to APRS WebChat are documented in this file.
 
+## 1.1.1 — 2026-08-18
+
+- Notify operators when GitHub has a newer tagged release: dismissible banner,
+  About badge, and a download link. Disable with `APRS_UPDATE_CHECK=0`.
+
 ## 1.1.0 — 2026-08-18
 
 - Credit the author as Luis Almonte (HI3LAG) in the licence, README, package
