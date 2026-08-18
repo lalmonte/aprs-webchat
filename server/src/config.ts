@@ -15,7 +15,7 @@ function configPath(): string {
 
 /** Application identity announced in the APRS-IS login line. */
 export const APP_NAME = 'APRSWebChat';
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.1.0';
 
 /**
  * Experimental "tocall" used as the AX.25 destination of our packets. APZ***
