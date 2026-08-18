@@ -105,6 +105,9 @@ Then browse to `http://<pi-hostname>:3001` from another device on the LAN.
   APRS-IS, from the Settings modal.
 - **Log console.** Raw TNC2 lines, colour-coded (RF Tx / RF Rx / APRS-IS /
   errors), filterable.
+- **Update notice.** The backend checks GitHub for a newer tagged release and
+  the dashboard shows a banner with a download link (can be dismissed per
+  version, or disabled with `APRS_UPDATE_CHECK=0`).
 - **Resilient connectors.** Backoff reconnect, APRS-IS keepalives, receive
   watchdog. A packet heard on RF and again on APRS-IS is shown once.
 
@@ -235,6 +238,8 @@ stdout. If the terminal is silent the process is not running.
 | Config file | `APRS_CONFIG_PATH` | `server/data/config.json` | Contains the passcode |
 | History file | `APRS_HISTORY_PATH` | `server/data/history.json` | Chats and positions |
 | Beacon | `APRS_BEACON_*` | disabled | Interval, lat/lon, comment, symbol, transport |
+| GitHub update check | `APRS_UPDATE_CHECK` | `true` | Set `0` to disable the release banner |
+| GitHub repo | `APRS_GITHUB_REPO` | `lalmonte/aprs-webchat` | `owner/name` for `/releases/latest` |
 
 These values only seed the first boot. Afterwards the UI writes
 `server/data/config.json` (or `data/config.json` next to a packaged binary).

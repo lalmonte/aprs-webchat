@@ -10,6 +10,7 @@ import { LogConsole } from './LogConsole';
 import { MapView } from './MapView';
 import { Sidebar } from './Sidebar';
 import { TelemetryView } from './TelemetryView';
+import { UpdateBanner } from './UpdateBanner';
 import { WeatherView } from './WeatherView';
 
 type View = 'chat' | 'map' | 'weather' | 'telemetry' | 'bulletins';
@@ -124,6 +125,7 @@ export function ChatDashboard({
         </div>
       ) : null}
 
+      <UpdateBanner update={chat.update} />
       <div className="relative flex min-h-0 flex-1">
         {/* Scrim behind the mobile sidebar drawer. */}
         <button
@@ -167,6 +169,7 @@ export function ChatDashboard({
               : undefined
           }
           serverUrl={serverUrl}
+          updateAvailable={Boolean(chat.update)}
         />
 
         <main className="flex min-w-0 flex-1 flex-col">
@@ -298,7 +301,12 @@ export function ChatDashboard({
         onClose={() => setConfigOpen(false)}
         onSave={chat.updateConfig}
       />
-      <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <AboutModal
+        open={aboutOpen}
+        onClose={() => setAboutOpen(false)}
+        appVersion={chat.appVersion}
+        update={chat.update}
+      />
     </div>
   );
 }

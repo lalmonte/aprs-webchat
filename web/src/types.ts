@@ -170,6 +170,14 @@ export interface LogEntry {
   text: string;
 }
 
+export interface AppUpdateInfo {
+  currentVersion: string;
+  latestVersion: string;
+  releaseUrl: string;
+  releaseName?: string;
+  publishedAt?: string;
+}
+
 export interface AppSnapshot {
   config: PublicConfig;
   status: StatusSnapshot;
@@ -182,6 +190,8 @@ export interface AppSnapshot {
   bulletins: BulletinEntry[];
   logs: LogEntry[];
   station: string;
+  appVersion: string;
+  update: AppUpdateInfo | null;
 }
 
 export interface SendMessageRequest {
@@ -219,6 +229,7 @@ export interface ServerToClientEvents {
   bulletins: (entries: BulletinEntry[]) => void;
   log: (entry: LogEntry) => void;
   'logs:cleared': () => void;
+  update: (info: AppUpdateInfo | null) => void;
 }
 
 export interface ClientToServerEvents {

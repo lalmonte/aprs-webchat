@@ -26,6 +26,8 @@ interface SidebarProps {
   /** Opens the backend URL screen (Android shell / remote clients). */
   onChangeServer?: () => void;
   serverUrl?: string;
+  /** Quiet badge on About when a newer GitHub release exists. */
+  updateAvailable?: boolean;
 }
 
 export function Sidebar({
@@ -45,6 +47,7 @@ export function Sidebar({
   onOpenAbout,
   onChangeServer,
   serverUrl = '',
+  updateAvailable = false,
 }: SidebarProps) {
   const [newCallsign, setNewCallsign] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -481,6 +484,11 @@ export function Sidebar({
             <path d="M12 10v6M12 7.5v.5" strokeLinecap="round" />
           </svg>
           About
+          {updateAvailable ? (
+            <span className="ml-auto rounded-full bg-sky-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-sky-200">
+              Update
+            </span>
+          ) : null}
         </button>
       </div>
     </aside>

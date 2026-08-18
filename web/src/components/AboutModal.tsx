@@ -1,8 +1,12 @@
 import { useEffect } from 'react';
 
+import type { AppUpdateInfo } from '../types';
+
 interface AboutModalProps {
   open: boolean;
   onClose: () => void;
+  appVersion?: string | null;
+  update?: AppUpdateInfo | null;
 }
 
 const AUTHOR = {
@@ -14,7 +18,7 @@ const AUTHOR = {
 };
 
 /** About dialog: author name, callsign, QRZ profile and contact email. */
-export function AboutModal({ open, onClose }: AboutModalProps) {
+export function AboutModal({ open, onClose, appVersion, update }: AboutModalProps) {
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -37,7 +41,9 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="text-base font-bold text-slate-100">About</h3>
-            <p className="text-xs text-slate-400">APRS WebChat</p>
+            <p className="text-xs text-slate-400">
+              APRS WebChat{appVersion ? ` ${appVersion}` : ''}
+            </p>
           </div>
           <button
             type="button"
@@ -105,6 +111,12 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
             </div>
             <div>
               <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                Version
+              </dt>
+              <dd className="mt-0.5 font-mono text-slate-100">{appVersion ?? '—'}</dd>
+            </div>
+            <div>
+              <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                 Source
               </dt>
               <dd className="mt-0.5">
@@ -119,6 +131,24 @@ export function AboutModal({ open, onClose }: AboutModalProps) {
               </dd>
             </div>
           </dl>
+
+          {update ? (
+            <div className="rounded-xl border border-sky-400/30 bg-sky-500/10 p-3 text-xs text-sky-100">
+              <p className="font-semibold">New release {update.latestVersion}</p>
+              <p className="mt-1 text-sky-200/90">
+                This station is running {update.currentVersion}. Get the binary for your
+                platform from GitHub.
+              </p>
+              <a
+                href={update.releaseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-xs btn-info mt-2"
+              >
+                Open release
+              </a>
+            </div>
+          ) : null}
 
           <p className="text-[11px] leading-relaxed text-slate-500">
             Amateur radio software for APRS messaging over Direwolf (KISS TCP) and

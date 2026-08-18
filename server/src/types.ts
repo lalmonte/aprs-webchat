@@ -234,6 +234,15 @@ export interface LogEntry {
   text: string;
 }
 
+/** Newer GitHub Release than the running build, when one exists. */
+export interface AppUpdateInfo {
+  currentVersion: string;
+  latestVersion: string;
+  releaseUrl: string;
+  releaseName?: string;
+  publishedAt?: string;
+}
+
 export interface AppSnapshot {
   config: PublicConfig;
   status: StatusSnapshot;
@@ -247,6 +256,10 @@ export interface AppSnapshot {
   logs: LogEntry[];
   /** Full station callsign including SSID, e.g. "K6KJZ-9". */
   station: string;
+  /** Running application version (same as the packaged binary / APRS-IS vers). */
+  appVersion: string;
+  /** Present when GitHub has a newer tagged release than `appVersion`. */
+  update: AppUpdateInfo | null;
 }
 
 export interface SendMessageRequest {
@@ -282,6 +295,8 @@ export interface ServerToClientEvents {
   bulletins: (entries: BulletinEntry[]) => void;
   log: (entry: LogEntry) => void;
   'logs:cleared': () => void;
+  /** GitHub has a newer release, or null after catching up. */
+  update: (info: AppUpdateInfo | null) => void;
 }
 
 /** Events the browser can send to the server. */

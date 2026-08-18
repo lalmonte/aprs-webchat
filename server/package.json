@@ -9,7 +9,7 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "mock:tnc": "tsx src/tools/mock-tnc.ts",
-    "test": "tsc -p tsconfig.test.json && node --test .test-build/*/*.test.js",
+    "test": "tsc -p tsconfig.test.json && node --test \".test-build/**/*.test.js\"",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit"
   },
   "dependencies": {

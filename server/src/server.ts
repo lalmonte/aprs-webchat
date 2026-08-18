@@ -29,9 +29,11 @@ import { parseAprsWeather } from './protocol/weather.js';
 import { BeaconScheduler } from './beacon.js';
 import { HistoryStore } from './persistence.js';
 import { isPackaged, webRoot } from './runtime-paths.js';
+import { startUpdateChecker } from './github-release.js';
 import { Store } from './store.js';
 import type {
   AppSnapshot,
+  AppUpdateInfo,
   ChatMessage,
   ClientToServerEvents,
   LogLevel,
@@ -58,6 +60,7 @@ const HTTP_HOST = process.env.HOST ?? '0.0.0.0';
 const config = new ConfigStore();
 const store = new Store();
 const history = new HistoryStore();
+let latestUpdate: AppUpdateInfo | null = null;
 
 const restored = history.load();
 if (restored) store.hydrate(restored);
@@ -164,6 +167,8 @@ function snapshot(): AppSnapshot {
     bulletins: store.getBulletins(),
     logs: store.getLogs(),
     station: config.station,
+    appVersion: APP_VERSION,
+    update: latestUpdate,
   };
 }
 
@@ -650,6 +655,15 @@ log('system', 'Server', `${APP_NAME} ${APP_VERSION} listening on ${HTTP_HOST}:${
 log('system', 'Server', `Station callsign: ${config.station}.`);
 applyConnectorState(config.get());
 beacon.restart();
+
+startUpdateChecker({
+  currentVersion: APP_VERSION,
+  onResult: (update) => {
+    latestUpdate = update;
+    io.emit('update', update);
+  },
+  log: (message) => log('system', 'Update', message),
+});
 
 openDashboardIfNeeded(HTTP_HOST, HTTP_PORT);
 
