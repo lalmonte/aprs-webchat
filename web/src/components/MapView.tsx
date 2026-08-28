@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Popup, useMap } from 'react-leaflet';
 
 import {
   APRS_SYMBOLS_ATTRIBUTION,
@@ -22,9 +22,9 @@ import {
 import {
   MAP_TILE_ATTRIBUTION,
   MAP_TILE_MAX_ZOOM,
-  MAP_TILE_URL,
 } from '../lib/mapTiles';
 import type { StationPosition, StationWeather } from '../types';
+import { MapBasemapLayer } from './MapBasemapLayer';
 
 /** Stations older than this are drawn faded: the position may be stale. */
 const STALE_AFTER_MS = 60 * 60 * 1000;
@@ -175,14 +175,13 @@ export function MapView({ positions, weather, station, onSelectStation, onClearP
       <MapContainer
         center={[plotted[0]!.latitude, plotted[0]!.longitude]}
         zoom={9}
+        maxZoom={MAP_TILE_MAX_ZOOM}
         className="min-h-0 flex-1"
         style={{ background: '#0b1120' }}
         scrollWheelZoom
       >
-        <TileLayer
-          url={MAP_TILE_URL}
+        <MapBasemapLayer
           attribution={`${MAP_TILE_ATTRIBUTION} | ${APRS_SYMBOLS_ATTRIBUTION}`}
-          maxZoom={MAP_TILE_MAX_ZOOM}
         />
 
         <FitBounds positions={plotted} auto={fitRequest === 0} key={fitRequest} />

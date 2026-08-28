@@ -2,6 +2,11 @@
 
 All notable changes to APRS WebChat are documented in this file.
 
+## Unreleased
+
+- Fix map display: use OpenFreeMap dark vector tiles (recognizable geography) with
+  MapLibre GL and correct Vite worker bundling.
+
 ## 1.1.3 — 2026-08-27
 
 - Identify the client on RF and APRS-IS: tocall `APZWCH`, login `vers APRSWebChat`,

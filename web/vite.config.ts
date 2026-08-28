@@ -6,6 +6,10 @@ const BACKEND_URL = process.env.BACKEND_URL ?? 'http://127.0.0.1:3001';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  optimizeDeps: {
+    // MapLibre v6 ships a separate worker module; pre-bundling breaks dev loads.
+    exclude: ['maplibre-gl'],
+  },
   server: {
     port: 5173,
     // The dev server proxies the API and the WebSocket to the Node backend so
