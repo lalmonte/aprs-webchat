@@ -12,7 +12,7 @@ export const APP_DISPLAY_NAME = 'APRS WebChat';
 /** APRS-IS `vers` software id (no spaces; same convention as APRSdr16, UI-View32). */
 export const APP_NAME = 'APRSWebChat';
 
-export const APP_VERSION = '1.1.2';
+export const APP_VERSION = '1.1.3';
 
 /**
  * Experimental AX.25 destination ("tocall") for RF and APRS-IS third-party frames.
