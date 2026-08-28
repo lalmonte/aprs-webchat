@@ -2,7 +2,7 @@
 
 All notable changes to APRS WebChat are documented in this file.
 
-## Unreleased
+## 1.1.4 — 2026-08-27
 
 - Fix map display: use OpenFreeMap dark vector tiles (recognizable geography) with
   MapLibre GL and correct Vite worker bundling.
