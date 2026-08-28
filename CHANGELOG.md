@@ -2,6 +2,13 @@
 
 All notable changes to APRS WebChat are documented in this file.
 
+## 1.1.3 — 2026-08-27
+
+- Identify the client on RF and APRS-IS: tocall `APZWCH`, login `vers APRSWebChat`,
+  beacon comments include **APRS WebChat** when empty or when space allows. Shown in
+  Configuration and About.
+- Fix map basemap: switch from CARTO (API key required) to Esri World Dark Gray tiles.
+
 ## 1.1.2 — 2026-08-18
 
 - Sign macOS release binaries on a macOS GitHub runner so Apple Silicon

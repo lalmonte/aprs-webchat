@@ -298,6 +298,7 @@ export function ChatDashboard({
       <ConfigModal
         open={configOpen}
         config={chat.config}
+        clientIdentity={chat.clientIdentity}
         onClose={() => setConfigOpen(false)}
         onSave={chat.updateConfig}
       />
@@ -305,6 +306,7 @@ export function ChatDashboard({
         open={aboutOpen}
         onClose={() => setAboutOpen(false)}
         appVersion={chat.appVersion}
+        clientIdentity={chat.clientIdentity}
         update={chat.update}
       />
     </div>

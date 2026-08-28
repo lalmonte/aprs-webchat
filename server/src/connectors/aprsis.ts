@@ -1,4 +1,5 @@
-import { APP_NAME, APP_VERSION, APRS_TOCALL, type ConfigStore } from '../config.js';
+import { aprsIsKeepaliveComment, aprsIsVersField } from '../client-identity.js';
+import { APRS_TOCALL, type ConfigStore } from '../config.js';
 import { frameToTnc2, tnc2ToFrame, type Ax25Frame } from '../protocol/ax25.js';
 import { TcpConnector, type ConnectorHooks } from './base.js';
 
@@ -109,7 +110,7 @@ export class AprsIsConnector extends TcpConnector {
     const filter = aprsisFilter.trim();
     const login =
       `user ${this.config.station} pass ${passcode || '-1'} ` +
-      `vers ${APP_NAME} ${APP_VERSION}` +
+      `vers ${aprsIsVersField()}` +
       (filter ? ` filter ${filter}` : '');
 
     this.write(`${login}\r\n`);
@@ -163,7 +164,7 @@ export class AprsIsConnector extends TcpConnector {
     this.stopTimers();
 
     this.keepaliveTimer = setInterval(() => {
-      if (this.isConnected) this.write(`# ${APP_NAME} ${APP_VERSION} keepalive\r\n`);
+      if (this.isConnected) this.write(`${aprsIsKeepaliveComment()}\r\n`);
     }, KEEPALIVE_INTERVAL_MS);
 
     this.watchdogTimer = setInterval(() => {

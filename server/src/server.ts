@@ -5,7 +5,8 @@ import fastifyStatic from '@fastify/static';
 import Fastify from 'fastify';
 import { Server as SocketIoServer, type Socket } from 'socket.io';
 
-import { APP_NAME, APP_VERSION, ConfigStore } from './config.js';
+import { APP_NAME, APP_VERSION, getClientIdentity } from './client-identity.js';
+import { ConfigStore } from './config.js';
 import { AprsIsConnector } from './connectors/aprsis.js';
 import { DirewolfConnector } from './connectors/direwolf.js';
 import {
@@ -168,6 +169,7 @@ function snapshot(): AppSnapshot {
     logs: store.getLogs(),
     station: config.station,
     appVersion: APP_VERSION,
+    clientIdentity: getClientIdentity(),
     update: latestUpdate,
   };
 }

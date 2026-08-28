@@ -178,6 +178,14 @@ export interface AppUpdateInfo {
   publishedAt?: string;
 }
 
+/** How this application identifies itself on RF and APRS-IS. */
+export interface ClientIdentity {
+  displayName: string;
+  vers: string;
+  rfTocall: string;
+  signature: string;
+}
+
 export interface AppSnapshot {
   config: PublicConfig;
   status: StatusSnapshot;
@@ -191,6 +199,7 @@ export interface AppSnapshot {
   logs: LogEntry[];
   station: string;
   appVersion: string;
+  clientIdentity: ClientIdentity;
   update: AppUpdateInfo | null;
 }
 

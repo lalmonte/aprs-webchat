@@ -4,6 +4,7 @@ import { io, type Socket } from 'socket.io-client';
 import type {
   AppSnapshot,
   AppUpdateInfo,
+  ClientIdentity,
   BulletinEntry,
   ChatMessage,
   ClientToServerEvents,
@@ -72,6 +73,7 @@ export function useAprsChat(serverUrl = '') {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [activeCallsign, setActiveCallsign] = useState<string | null>(null);
   const [appVersion, setAppVersion] = useState<string | null>(null);
+  const [clientIdentity, setClientIdentity] = useState<ClientIdentity | null>(null);
   const [update, setUpdate] = useState<AppUpdateInfo | null>(null);
 
   useEffect(() => {
@@ -124,6 +126,7 @@ export function useAprsChat(serverUrl = '') {
       setMessages(incoming.messages);
       setLogs(incoming.logs.slice(-MAX_CLIENT_LOGS));
       setAppVersion(incoming.appVersion ?? null);
+      setClientIdentity(incoming.clientIdentity ?? null);
       setUpdate(incoming.update ?? null);
       setActiveCallsign((current) => current ?? incoming.conversations[0]?.callsign ?? null);
     });
@@ -307,6 +310,7 @@ export function useAprsChat(serverUrl = '') {
     bulletins,
     logs,
     appVersion,
+    clientIdentity,
     update,
     activeCallsign,
     activeConversation,

@@ -243,6 +243,14 @@ export interface AppUpdateInfo {
   publishedAt?: string;
 }
 
+/** How this application identifies itself on RF and APRS-IS. */
+export interface ClientIdentity {
+  displayName: string;
+  vers: string;
+  rfTocall: string;
+  signature: string;
+}
+
 export interface AppSnapshot {
   config: PublicConfig;
   status: StatusSnapshot;
@@ -258,6 +266,8 @@ export interface AppSnapshot {
   station: string;
   /** Running application version (same as the packaged binary / APRS-IS vers). */
   appVersion: string;
+  /** RF tocall and APRS-IS `vers` string for network identification. */
+  clientIdentity: ClientIdentity;
   /** Present when GitHub has a newer tagged release than `appVersion`. */
   update: AppUpdateInfo | null;
 }

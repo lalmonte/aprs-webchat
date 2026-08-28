@@ -13,15 +13,13 @@ function configPath(): string {
   return process.env.APRS_CONFIG_PATH ?? resolve(dataDir(), 'config.json');
 }
 
-/** Application identity announced in the APRS-IS login line. */
-export const APP_NAME = 'APRSWebChat';
-export const APP_VERSION = '1.1.2';
-
-/**
- * Experimental "tocall" used as the AX.25 destination of our packets. APZ***
- * is the range reserved for applications without a registered tocall.
- */
-export const APRS_TOCALL = 'APZWCH';
+export {
+  APP_DISPLAY_NAME,
+  APP_NAME,
+  APP_VERSION,
+  APRS_TOCALL,
+  getClientIdentity,
+} from './client-identity.js';
 
 function intFromEnv(name: string, fallback: number): number {
   const parsed = Number.parseInt(process.env[name] ?? '', 10);

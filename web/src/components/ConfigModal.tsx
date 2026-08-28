@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import type { ConfigUpdateResult, PublicConfig, StationConfig, TransportId } from '../types';
+import type { ConfigUpdateResult, ClientIdentity, PublicConfig, StationConfig, TransportId } from '../types';
 
 interface ConfigModalProps {
   open: boolean;
   config: PublicConfig | null;
+  clientIdentity?: ClientIdentity | null;
   onClose: () => void;
   onSave: (patch: Partial<StationConfig>) => Promise<ConfigUpdateResult>;
 }
@@ -84,7 +85,7 @@ const FIELD_INPUT = 'input input-sm input-bordered w-full bg-black/30';
 const SECTION_TITLE =
   'mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-sky-300';
 
-export function ConfigModal({ open, config, onClose, onSave }: ConfigModalProps) {
+export function ConfigModal({ open, config, clientIdentity, onClose, onSave }: ConfigModalProps) {
   const [form, setForm] = useState<FormState | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -207,6 +208,42 @@ export function ConfigModal({ open, config, onClose, onSave }: ConfigModalProps)
             ✕
           </button>
         </div>
+
+        {clientIdentity ? (
+          <div
+            className="mt-4 rounded-xl border border-white/5 bg-black/25 p-3 text-xs text-slate-300"
+            aria-label="Client identification on APRS networks"
+          >
+            <p className="font-semibold text-slate-100">Client on the network</p>
+            <dl className="mt-2 grid gap-2 sm:grid-cols-3">
+              <div>
+                <dt className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                  Name
+                </dt>
+                <dd className="mt-0.5 font-mono text-slate-100">{clientIdentity.displayName}</dd>
+              </div>
+              <div>
+                <dt className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                  RF tocall
+                </dt>
+                <dd className="mt-0.5 font-mono text-slate-100">{clientIdentity.rfTocall}</dd>
+              </div>
+              <div>
+                <dt className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                  APRS-IS vers
+                </dt>
+                <dd className="mt-0.5 font-mono text-slate-100">{clientIdentity.vers}</dd>
+              </div>
+            </dl>
+            <p className="mt-2 text-[11px] text-slate-500">
+              Outgoing RF and APRS-IS packets use tocall{' '}
+              <span className="font-mono text-slate-400">{clientIdentity.rfTocall}</span>. APRS-IS
+              login reports <span className="font-mono text-slate-400">vers {clientIdentity.vers}</span>.
+              Beacons include <span className="font-mono text-slate-400">{clientIdentity.signature}</span>{' '}
+              in the comment when empty or when space allows.
+            </p>
+          </div>
+        ) : null}
 
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-5">
           <fieldset>
@@ -520,16 +557,24 @@ export function ConfigModal({ open, config, onClose, onSave }: ConfigModalProps)
               <input
                 className={FIELD_INPUT}
                 maxLength={43}
-                placeholder="QTH Santiago"
+                placeholder="QTH Santiago (leave empty for app name)"
                 value={form.beaconComment}
                 disabled={!form.beaconEnabled}
                 onChange={(event) => update('beaconComment', event.target.value)}
               />
             </label>
             <p className="mt-1.5 text-[11px] text-slate-500">
-              Sends an uncompressed position with messaging enabled (`=`). Fixed stations should
-              usually stay at 10 minutes or more; the first beacon goes out a few seconds after
-              saving.
+              Sends an uncompressed position with messaging enabled (`=`). If the comment is empty,
+              {clientIdentity ? (
+                <>
+                  {' '}
+                  <span className="font-mono text-slate-400">{clientIdentity.signature}</span> is sent
+                </>
+              ) : (
+                ' the app name is sent'
+              )}
+              . Fixed stations should usually stay at 10 minutes or more; the first beacon goes out a
+              few seconds after saving.
             </p>
           </fieldset>
 

@@ -19,6 +19,11 @@ import {
   knotsToKmh,
   mphToKmh,
 } from '../lib/format';
+import {
+  MAP_TILE_ATTRIBUTION,
+  MAP_TILE_MAX_ZOOM,
+  MAP_TILE_URL,
+} from '../lib/mapTiles';
 import type { StationPosition, StationWeather } from '../types';
 
 /** Stations older than this are drawn faded: the position may be stale. */
@@ -175,9 +180,9 @@ export function MapView({ positions, weather, station, onSelectStation, onClearP
         scrollWheelZoom
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-          attribution={`&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> | ${APRS_SYMBOLS_ATTRIBUTION}`}
-          maxZoom={19}
+          url={MAP_TILE_URL}
+          attribution={`${MAP_TILE_ATTRIBUTION} | ${APRS_SYMBOLS_ATTRIBUTION}`}
+          maxZoom={MAP_TILE_MAX_ZOOM}
         />
 
         <FitBounds positions={plotted} auto={fitRequest === 0} key={fitRequest} />

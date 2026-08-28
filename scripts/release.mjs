@@ -73,17 +73,17 @@ writeJson(join(root, 'web/package.json'), (data) => {
   data.version = version;
 });
 
-const configPath = join(root, 'server/src/config.ts');
-const config = readFileSync(configPath, 'utf8');
-const updated = config.replace(
+const identityPath = join(root, 'server/src/client-identity.ts');
+const identity = readFileSync(identityPath, 'utf8');
+const updatedIdentity = identity.replace(
   /export const APP_VERSION = '[^']+'/,
   `export const APP_VERSION = '${version}'`,
 );
-if (updated === config) {
-  console.error('Could not update APP_VERSION in server/src/config.ts');
+if (updatedIdentity === identity) {
+  console.error('Could not update APP_VERSION in server/src/client-identity.ts');
   process.exit(1);
 }
-writeFileSync(configPath, updated);
+writeFileSync(identityPath, updatedIdentity);
 
 const changelog = readFileSync(join(root, 'CHANGELOG.md'), 'utf8');
 if (!changelog.includes(`## ${version}`)) {
@@ -92,7 +92,7 @@ if (!changelog.includes(`## ${version}`)) {
   );
 }
 
-git(['add', 'package.json', 'server/package.json', 'web/package.json', 'server/src/config.ts']);
+git(['add', 'package.json', 'server/package.json', 'web/package.json', 'server/src/client-identity.ts']);
 git(['commit', '-m', `Release ${tag}`]);
 git(['tag', '-a', tag, '-m', `APRS WebChat ${tag}`]);
 

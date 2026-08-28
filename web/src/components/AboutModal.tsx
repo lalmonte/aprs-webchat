@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 
-import type { AppUpdateInfo } from '../types';
+import type { AppUpdateInfo, ClientIdentity } from '../types';
 
 interface AboutModalProps {
   open: boolean;
   onClose: () => void;
   appVersion?: string | null;
+  clientIdentity?: ClientIdentity | null;
   update?: AppUpdateInfo | null;
 }
 
@@ -18,7 +19,7 @@ const AUTHOR = {
 };
 
 /** About dialog: author name, callsign, QRZ profile and contact email. */
-export function AboutModal({ open, onClose, appVersion, update }: AboutModalProps) {
+export function AboutModal({ open, onClose, appVersion, clientIdentity, update }: AboutModalProps) {
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -115,6 +116,22 @@ export function AboutModal({ open, onClose, appVersion, update }: AboutModalProp
               </dt>
               <dd className="mt-0.5 font-mono text-slate-100">{appVersion ?? '—'}</dd>
             </div>
+            {clientIdentity ? (
+              <>
+                <div>
+                  <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                    RF tocall
+                  </dt>
+                  <dd className="mt-0.5 font-mono text-slate-100">{clientIdentity.rfTocall}</dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                    APRS-IS client
+                  </dt>
+                  <dd className="mt-0.5 font-mono text-slate-100">{clientIdentity.vers}</dd>
+                </div>
+              </>
+            ) : null}
             <div>
               <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                 Source

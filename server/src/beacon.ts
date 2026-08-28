@@ -1,3 +1,4 @@
+import { beaconCommentWithSignature } from './client-identity.js';
 import type { ConfigStore } from './config.js';
 import { buildPositionPayload } from './protocol/position.js';
 import type { LogLevel, TransportId } from './types.js';
@@ -68,7 +69,7 @@ export class BeaconScheduler {
         longitude: settings.beaconLongitude,
         symbolTable: settings.beaconSymbolTable,
         symbolCode: settings.beaconSymbolCode,
-        comment: settings.beaconComment,
+        comment: beaconCommentWithSignature(settings.beaconComment),
         messaging: true,
       });
     } catch (error) {
